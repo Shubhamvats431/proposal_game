@@ -38,6 +38,7 @@
             left: 50%;
             transform: translateX(-50%);
             cursor: grab;
+            user-select: none;
         }
     </style>
 </head>
@@ -60,35 +61,63 @@ const rejectBox = document.getElementById("rejectBox");
 const acceptBox = document.getElementById("acceptBox");
 
 let offsetX, offsetY;
+let dragging = false;
 
-heart.addEventListener("touchstart", startDrag);
-heart.addEventListener("touchmove", drag);
+// Start drag
 heart.addEventListener("mousedown", startDrag);
+heart.addEventListener("touchstart", startDrag, {passive:false});
+
+// Dragging
 document.addEventListener("mousemove", drag);
-document.addEventListener("mouseup", drop);
+document.addEventListener("touchmove", drag, {passive:false});
+
+// Drop
+document.addEventListener("mouseup", endDrag);
+document.addEventListener("touchend", endDrag);
 
 function startDrag(e) {
+    e.preventDefault();
+    dragging = true;
     const touch = e.touches ? e.touches[0] : e;
     offsetX = touch.clientX - heart.offsetLeft;
     offsetY = touch.clientY - heart.offsetTop;
 }
 
 function drag(e) {
-    if (offsetX == null) return;
+    if (!dragging) return;
 
+    e.preventDefault();
     const touch = e.touches ? e.touches[0] : e;
-    heart.style.left = touch.clientX - offsetX + "px";
-    heart.style.top = touch.clientY - offsetY + "px";
+    let x = touch.clientX - offsetX;
+    let y = touch.clientY - offsetY;
 
-    checkRejectProximity();
+    // Keep heart inside window
+    x = Math.max(0, Math.min(window.innerWidth - heart.offsetWidth, x));
+    y = Math.max(0, Math.min(window.innerHeight - heart.offsetHeight, y));
+
+    heart.style.left = x + "px";
+    heart.style.top = y + "px";
+
+    // Check if near reject box
+    if (isOverlapping(heart, rejectBox)) {
+        const rx = Math.random() * (window.innerWidth - rejectBox.offsetWidth);
+        const ry = Math.random() * (window.innerHeight - rejectBox.offsetHeight);
+        rejectBox.style.position = "absolute";
+        rejectBox.style.left = rx + "px";
+        rejectBox.style.top = ry + "px";
+    }
 }
 
-function drop() {
+function endDrag(e) {
+    if (!dragging) return;
+    dragging = false;
+
     if (isOverlapping(heart, acceptBox)) {
         alert("Yayyy! You just made my day 😎❤️");
+        // Reset heart
+        heart.style.left = "50%";
+        heart.style.top = "200px";
     }
-
-    offsetX = null;
 }
 
 function isOverlapping(a, b) {
@@ -101,17 +130,6 @@ function isOverlapping(a, b) {
         rect1.bottom < rect2.top ||
         rect1.top > rect2.bottom
     );
-}
-
-function checkRejectProximity() {
-    if (isOverlapping(heart, rejectBox)) {
-        const x = Math.random() * (window.innerWidth - 200);
-        const y = Math.random() * (window.innerHeight - 200);
-
-        rejectBox.style.position = "absolute";
-        rejectBox.style.left = x + "px";
-        rejectBox.style.top = y + "px";
-    }
 }
 </script>
 
