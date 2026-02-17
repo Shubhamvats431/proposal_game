@@ -41,6 +41,15 @@ function moveButton() {
     button.style.left = x + "px";
     button.style.top = y + "px";
 }
+
+// For desktop
+document.getElementById("reject").addEventListener("mouseover", moveButton);
+
+// For mobile (touch)
+document.getElementById("reject").addEventListener("touchstart", function(e) {
+    e.preventDefault();
+    moveButton();
+});
 </script>
 
 </body>
