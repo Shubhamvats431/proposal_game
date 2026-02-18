@@ -1,137 +1,110 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Important Question Dolly 😌</title>
-
+    <title>Dolly Classified Examination</title>
     <style>
         body {
-            text-align: center;
             font-family: Arial, sans-serif;
-            margin-top: 50px;
-            overflow: hidden;
+            background: linear-gradient(135deg, #89f7fe, #66a6ff);
+            text-align: center;
+            padding: 60px;
         }
 
-        h1 { margin-bottom: 10px; }
+        h1 { font-size: 36px; }
 
-        .options {
-            display: flex;
-            justify-content: center;
-            gap: 80px;
-            margin-top: 80px;
-        }
-
-        .box {
-            width: 150px;
-            height: 100px;
-            border: 3px solid black;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .question {
+            margin: 30px 0;
             font-size: 20px;
-            position: relative;
         }
 
-        #heart {
-            font-size: 40px;
-            position: absolute;
-            top: 200px;
-            left: 50%;
-            transform: translateX(-50%);
-            cursor: grab;
-            user-select: none;
+        button {
+            padding: 10px 20px;
+            margin: 8px;
+            border-radius: 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.1);
+        }
+
+        #result {
+            display: none;
+            margin-top: 40px;
+            font-size: 22px;
         }
     </style>
 </head>
-
 <body>
 
-<h1>Hello Dolly 😄</h1>
-<h2>Will you be my partner in shararati tatav partnership firm? 😄</h2>
-<h3>Drag the heart to chose😌</h3>
+<h1>🔍 Dolly Personality Scanner</h1>
+<p>Please answer honestly. This is totally normal.</p>
 
-<div class="options">
-    <div class="box" id="acceptBox">Accept ❤️</div>
-    <div class="box" id="rejectBox">Reject 😢</div>
+<form id="quizForm" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+
+    <div class="question">
+        1. When bored, Dolly:
+        <br>
+        <button type="button" onclick="saveAnswer('q1','Starts drama')">Starts drama</button>
+        <button type="button" onclick="saveAnswer('q1','Sleeps')">Sleeps</button>
+        <button type="button" onclick="saveAnswer('q1','Annoys someone')">Annoys someone</button>
+    </div>
+
+    <div class="question" style="display:none;">
+        2. Main superpower:
+        <br>
+        <button type="button" onclick="saveAnswer('q2','Talking nonstop')">Talking nonstop</button>
+        <button type="button" onclick="saveAnswer('q2','Detecting gossip')">Detecting gossip</button>
+        <button type="button" onclick="saveAnswer('q2','Overthinking')">Overthinking</button>
+    </div>
+
+    <div class="question" style="display:none;">
+        3. If she was an app:
+        <br>
+        <button type="button" onclick="finishQuiz('Battery Drainer Pro')">Battery Drainer Pro</button>
+        <button type="button" onclick="finishQuiz('Drama+ Premium')">Drama+ Premium</button>
+        <button type="button" onclick="finishQuiz('Overreact 2.0')">Overreact 2.0</button>
+    </div>
+
+    <!-- Hidden Inputs -->
+    <input type="hidden" name="Question1" id="q1">
+    <input type="hidden" name="Question2" id="q2">
+    <input type="hidden" name="Question3" id="q3">
+
+</form>
+
+<div id="result">
+    🎉 RESULT UNLOCKED 🎉<br><br>
+    Official Title: <strong>Chaos Coordinator Level 100</strong><br><br>
+    Submitting data...
 </div>
 
-<div id="heart">❤️</div>
-
 <script>
-const heart = document.getElementById("heart");
-const rejectBox = document.getElementById("rejectBox");
-const acceptBox = document.getElementById("acceptBox");
+    let current = 0;
+    const questions = document.querySelectorAll(".question");
 
-let offsetX, offsetY;
-let dragging = false;
+    function saveAnswer(question, answer) {
+        document.getElementById(question).value = answer;
 
-// Start drag
-heart.addEventListener("mousedown", startDrag);
-heart.addEventListener("touchstart", startDrag, {passive:false});
-
-// Dragging
-document.addEventListener("mousemove", drag);
-document.addEventListener("touchmove", drag, {passive:false});
-
-// Drop
-document.addEventListener("mouseup", endDrag);
-document.addEventListener("touchend", endDrag);
-
-function startDrag(e) {
-    e.preventDefault();
-    dragging = true;
-    const touch = e.touches ? e.touches[0] : e;
-    offsetX = touch.clientX - heart.offsetLeft;
-    offsetY = touch.clientY - heart.offsetTop;
-}
-
-function drag(e) {
-    if (!dragging) return;
-
-    e.preventDefault();
-    const touch = e.touches ? e.touches[0] : e;
-    let x = touch.clientX - offsetX;
-    let y = touch.clientY - offsetY;
-
-    // Keep heart inside window
-    x = Math.max(0, Math.min(window.innerWidth - heart.offsetWidth, x));
-    y = Math.max(0, Math.min(window.innerHeight - heart.offsetHeight, y));
-
-    heart.style.left = x + "px";
-    heart.style.top = y + "px";
-
-    // Check if near reject box
-    if (isOverlapping(heart, rejectBox)) {
-        const rx = Math.random() * (window.innerWidth - rejectBox.offsetWidth);
-        const ry = Math.random() * (window.innerHeight - rejectBox.offsetHeight);
-        rejectBox.style.position = "absolute";
-        rejectBox.style.left = rx + "px";
-        rejectBox.style.top = ry + "px";
+        questions[current].style.display = "none";
+        current++;
+        questions[current].style.display = "block";
     }
-}
 
-function endDrag(e) {
-    if (!dragging) return;
-    dragging = false;
+    function finishQuiz(answer) {
+        document.getElementById("q3").value = answer;
 
-    if (isOverlapping(heart, acceptBox)) {
-        alert("Yayyy! You just made my day 😎❤️");
-        // Reset heart
-        heart.style.left = "50%";
-        heart.style.top = "200px";
+        questions[current].style.display = "none";
+        document.getElementById("result").style.display = "block";
+
+        // Submit to Formspree after short delay
+        setTimeout(function() {
+            document.getElementById("quizForm").submit();
+        }, 1500);
     }
-}
-
-function isOverlapping(a, b) {
-    const rect1 = a.getBoundingClientRect();
-    const rect2 = b.getBoundingClientRect();
-
-    return !(
-        rect1.right < rect2.left ||
-        rect1.left > rect2.right ||
-        rect1.bottom < rect2.top ||
-        rect1.top > rect2.bottom
-    );
-}
 </script>
 
 </body>
