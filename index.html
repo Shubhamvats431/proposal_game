@@ -1,1 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Niku Friendship Game</title>
 
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    body{
+        height:100vh;
+        overflow:hidden;
+        background: linear-gradient(135deg,#ff9ec4,#ffd6e7);
+        display:flex;
+        justify-content:center;
+        align-items:center;
+    }
+
+    .game-box{
+        width:90%;
+        max-width:500px;
+        background:white;
+        border-radius:25px;
+        padding:40px 25px;
+        text-align:center;
+        box-shadow:0 15px 40px rgba(0,0,0,0.2);
+        position:relative;
+    }
+
+    h1{
+        color:#ff3f7f;
+        margin-bottom:15px;
+        font-size:32px;
+    }
+
+    p{
+        color:#666;
+        margin-bottom:30px;
+        font-size:18px;
+    }
+
+    .drop-zone{
+        width:180px;
+        height:180px;
+        margin:20px auto;
+        border:4px dashed #ff6b9f;
+        border-radius:50%;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        position:relative;
+        background:#fff5f8;
+    }
+
+    .drop-zone span{
+        color:#ff3f7f;
+        font-size:20px;
+        font-weight:bold;
+        pointer-events:none;
+    }
+
+    .heart{
+        width:90px;
+        height:90px;
+        background:#ff2e63;
+        position:absolute;
+        bottom:40px;
+        left:50%;
+        transform:translateX(-50%) rotate(-45deg);
+        cursor:grab;
+        transition:0.15s;
+        z-index:10;
+    }
+
+    .heart::before,
+    .heart::after{
+        content:'';
+        width:90px;
+        height:90px;
+        background:#ff2e63;
+        border-radius:50%;
+        position:absolute;
+    }
+
+    .heart::before{
+        top:-45px;
+        left:0;
+    }
+
+    .heart::after{
+        left:45px;
+        top:0;
+    }
+
+    .success{
+        display:none;
+        margin-top:25px;
+        font-size:30px;
+        color:#ff2e63;
+        animation: pop 0.6s ease;
+    }
+
+    @keyframes pop{
+        0%{
+            transform:scale(0);
+            opacity:0;
+        }
+        100%{
+            transform:scale(1);
+            opacity:1;
+        }
+    }
+
+    .sparkle{
+        position:absolute;
+        font-size:24px;
+        animation: float 2s linear infinite;
+        opacity:0.8;
+    }
+
+    @keyframes float{
+        0%{
+            transform:translateY(0) rotate(0deg);
+            opacity:1;
+        }
+        100%{
+            transform:translateY(-120px) rotate(360deg);
+            opacity:0;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="game-box">
+    <h1>Niku 💖</h1>
+    <p>Would you be my friend?</p>
+
+    <div class="drop-zone" id="dropZone">
+        <span>Drop Heart Here</span>
+    </div>
+
+    <div class="heart" id="heart"></div>
+
+    <div class="success" id="success">
+        Yayyyy!! 💕<br>
+        Niku is now your friend 🥹
+    </div>
+</div>
+
+<script>
+const heart = document.getElementById("heart");
+const dropZone = document.getElementById("dropZone");
+const success = document.getElementById("success");
+
+let offsetX = 0;
+let offsetY = 0;
+let dragging = false;
+
+// Heart runs away
+document.addEventListener("mousemove", (e) => {
+
+    const rect = heart.getBoundingClientRect();
+
+    const dx = e.clientX - (rect.left + rect.width/2);
+    const dy = e.clientY - (rect.top + rect.height/2);
+
+    const distance = Math.sqrt(dx*dx + dy*dy);
+
+    // If cursor comes near, heart escapes
+    if(distance < 140 && !dragging){
+
+        const moveX = (Math.random() - 0.5) * 350;
+        const moveY = (Math.random() - 0.5) * 250;
+
+        let newLeft = rect.left + moveX;
+        let newTop = rect.top + moveY;
+
+        // Keep inside screen
+        newLeft = Math.max(20, Math.min(window.innerWidth - 120, newLeft));
+        newTop = Math.max(20, Math.min(window.innerHeight - 120, newTop));
+
+        heart.style.left = newLeft + "px";
+        heart.style.top = newTop + "px";
+        heart.style.bottom = "auto";
+        heart.style.transform = "rotate(-45deg)";
+    }
+});
+
+// Touch support
+heart.addEventListener("mousedown", startDrag);
+document.addEventListener("mouseup", stopDrag);
+document.addEventListener("mousemove", drag);
+
+heart.addEventListener("touchstart", startDragTouch);
+document.addEventListener("touchend", stopDrag);
+document.addEventListener("touchmove", dragTouch);
+
+function startDrag(e){
+    dragging = true;
+
+    offsetX = e.clientX - heart.getBoundingClientRect().left;
+    offsetY = e.clientY - heart.getBoundingClientRect().top;
+
+    heart.style.cursor = "grabbing";
+}
+
+function drag(e){
+    if(!dragging) return;
+
+    heart.style.left = (e.clientX - offsetX) + "px";
+    heart.style.top = (e.clientY - offsetY) + "px";
+    heart.style.bottom = "auto";
+    heart.style.transform = "rotate(-45deg)";
+}
+
+function startDragTouch(e){
+    dragging = true;
+
+    const touch = e.touches[0];
+
+    offsetX = touch.clientX - heart.getBoundingClientRect().left;
+    offsetY = touch.clientY - heart.getBoundingClientRect().top;
+}
+
+function dragTouch(e){
+    if(!dragging) return;
+
+    const touch = e.touches[0];
+
+    heart.style.left = (touch.clientX - offsetX) + "px";
+    heart.style.top = (touch.clientY - offsetY) + "px";
+    heart.style.bottom = "auto";
+    heart.style.transform = "rotate(-45deg)";
+}
+
+function stopDrag(){
+    if(!dragging) return;
+
+    dragging = false;
+    heart.style.cursor = "grab";
+
+    const heartRect = heart.getBoundingClientRect();
+    const dropRect = dropZone.getBoundingClientRect();
+
+    // Check drop success
+    if(
+        heartRect.left < dropRect.right &&
+        heartRect.right > dropRect.left &&
+        heartRect.top < dropRect.bottom &&
+        heartRect.bottom > dropRect.top
+    ){
+        winGame();
+    }
+}
+
+function winGame(){
+
+    heart.style.display = "none";
+    success.style.display = "block";
+
+    for(let i=0;i<25;i++){
+        createSparkle();
+    }
+}
+
+function createSparkle(){
+
+    const sparkle = document.createElement("div");
+    sparkle.classList.add("sparkle");
+
+    sparkle.innerHTML = ["💖","✨","💕","🌸"][Math.floor(Math.random()*4)];
+
+    sparkle.style.left = Math.random() * window.innerWidth + "px";
+    sparkle.style.top = window.innerHeight - 50 + "px";
+
+    sparkle.style.animationDuration = (Math.random()*2+1) + "s";
+
+    document.body.appendChild(sparkle);
+
+    setTimeout(()=>{
+        sparkle.remove();
+    },3000);
+}
+</script>
+
+</body>
+</html>
