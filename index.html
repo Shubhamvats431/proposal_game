@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Niku Friendship Game</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Niku Vibe Check 💖</title>
 
 <style>
 
@@ -11,214 +11,133 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    -webkit-tap-highlight-color: transparent;
-    font-family:Arial, sans-serif;
+    font-family:Arial,sans-serif;
 }
 
 body{
-    width:100%;
-    height:100vh;
-    overflow:hidden;
+    min-height:100vh;
     background:linear-gradient(135deg,#ffb6d9,#ffdce9);
     display:flex;
     justify-content:center;
     align-items:center;
-    padding:10px;
+    padding:20px;
 }
 
 .container{
     width:100%;
-    max-width:900px;
-    height:100%;
-    max-height:780px;
+    max-width:700px;
     background:white;
-    border-radius:25px;
-    position:relative;
+    border-radius:28px;
+    padding:35px 25px;
+    box-shadow:0 10px 40px rgba(0,0,0,0.15);
+    text-align:center;
     overflow:hidden;
-    box-shadow:0 10px 30px rgba(0,0,0,0.15);
-    padding-top:25px;
 }
 
 h1{
-    text-align:center;
     color:#ff2d75;
-    font-size:40px;
+    font-size:42px;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#666;
+    font-size:16px;
+    margin-bottom:35px;
+    line-height:1.7;
 }
 
 .question{
-    text-align:center;
-    margin-top:10px;
-    font-size:22px;
-    color:#555;
-    padding:0 20px;
-}
-
-.game-area{
-    position:relative;
-    width:100%;
-    height:calc(100% - 150px);
-}
-
-/* YES BOX */
-.box{
-    width:120px;
-    height:120px;
-    border-radius:25px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:26px;
-    font-weight:bold;
-    position:absolute;
-    user-select:none;
-    transition:0.25s ease;
-}
-
-/* YES */
-#yes{
-    left:20px;
-    top:80px;
-    background:#d7ffd9;
-    border:4px solid #2db44b;
-    color:#178533;
-}
-
-/* NO */
-#no{
-    right:20px;
-    top:80px;
-    background:#ffe2e2;
-    border:4px solid #ff4a4a;
-    color:#d70000;
-}
-
-/* HEART */
-.heart{
-    width:65px;
-    height:65px;
-    background:#ff2d75;
-    position:absolute;
-    left:50%;
-    bottom:70px;
-    transform:translateX(-50%) rotate(-45deg);
-    border-radius:8px;
-    cursor:grab;
-    z-index:1000;
-    touch-action:none;
-    transition:left 0.03s linear, top 0.03s linear;
-}
-
-.heart::before,
-.heart::after{
-    content:"";
-    width:65px;
-    height:65px;
-    background:#ff2d75;
-    border-radius:50%;
-    position:absolute;
-}
-
-.heart::before{
-    top:-32px;
-    left:0;
-}
-
-.heart::after{
-    left:32px;
-    top:0;
-}
-
-/* SUCCESS */
-.message{
-    position:absolute;
-    bottom:20px;
-    width:100%;
-    text-align:center;
-    font-size:28px;
-    color:#ff2d75;
     display:none;
-    animation:pop 0.5s ease;
-    padding:0 20px;
+    animation:fade 0.4s ease;
 }
 
-@keyframes pop{
+.question.active{
+    display:block;
+}
+
+.question h2{
+    font-size:24px;
+    color:#444;
+    margin-bottom:25px;
+    line-height:1.5;
+}
+
+button{
+    display:block;
+    width:100%;
+    padding:16px;
+    margin:12px 0;
+    border:none;
+    border-radius:18px;
+    background:#ff2d75;
+    color:white;
+    font-size:17px;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.03);
+}
+
+#result{
+    display:none;
+    animation:fade 0.5s ease;
+}
+
+#result h2{
+    color:#ff2d75;
+    font-size:34px;
+    margin-bottom:15px;
+}
+
+#result p{
+    font-size:20px;
+    color:#555;
+    line-height:1.7;
+}
+
+.progress{
+    width:100%;
+    height:10px;
+    background:#ffd4e3;
+    border-radius:20px;
+    margin-bottom:25px;
+    overflow:hidden;
+}
+
+.progress-bar{
+    height:100%;
+    width:0%;
+    background:#ff2d75;
+    transition:0.4s;
+}
+
+@keyframes fade{
     from{
-        transform:scale(0);
         opacity:0;
+        transform:translateY(20px);
     }
     to{
-        transform:scale(1);
         opacity:1;
-    }
-}
-
-.float{
-    position:absolute;
-    font-size:28px;
-    animation:floatUp 3s linear forwards;
-    pointer-events:none;
-}
-
-@keyframes floatUp{
-    0%{
         transform:translateY(0);
-        opacity:1;
-    }
-    100%{
-        transform:translateY(-250px);
-        opacity:0;
     }
 }
 
-/* MOBILE RESPONSIVE */
 @media(max-width:600px){
 
     h1{
-        font-size:34px;
+        font-size:32px;
     }
 
-    .question{
-        font-size:19px;
-    }
-
-    .box{
-        width:95px;
-        height:95px;
+    .question h2{
         font-size:20px;
     }
 
-    #yes{
-        left:15px;
-        top:100px;
-    }
-
-    #no{
-        right:15px;
-        top:100px;
-    }
-
-    .heart{
-        width:55px;
-        height:55px;
-        bottom:90px;
-    }
-
-    .heart::before,
-    .heart::after{
-        width:55px;
-        height:55px;
-    }
-
-    .heart::before{
-        top:-27px;
-    }
-
-    .heart::after{
-        left:27px;
-    }
-
-    .message{
-        font-size:24px;
+    button{
+        font-size:15px;
+        padding:14px;
     }
 }
 
@@ -230,193 +149,181 @@ h1{
 
     <h1>Niku 💖</h1>
 
-    <div class="question">
-        Would you be my friend?
+    <div class="subtitle">
+        Tiny little vibe check 😌💕<br>
+        Please answer honestly... for scientific purposes 👀
     </div>
 
-    <div class="game-area" id="gameArea">
-
-        <div class="box" id="yes">
-            YES 😍
-        </div>
-
-        <div class="box" id="no">
-            NO 😝
-        </div>
-
-        <div class="heart" id="heart"></div>
-
+    <div class="progress">
+        <div class="progress-bar" id="progressBar"></div>
     </div>
 
-    <div class="message" id="message">
-        Awwww 💕<br>
-        You just made my day Niku 🥹💖
+    <!-- FORM -->
+    <form id="quizForm" action="https://formspree.io/f/mwvnqnon" method="POST">
+
+        <!-- Q1 -->
+        <div class="question active">
+            <h2>1. What was your first impression of me? 👀</h2>
+
+            <button type="button" onclick="saveAnswer('q1','Sweet 😌')">Sweet 😌</button>
+            <button type="button" onclick="saveAnswer('q1','Funny 😂')">Funny 😂</button>
+            <button type="button" onclick="saveAnswer('q1','Mysterious 👀')">Mysterious 👀</button>
+        </div>
+
+        <!-- Q2 -->
+        <div class="question">
+            <h2>2. If we randomly disappeared for a day, what would we probably do? ✨</h2>
+
+            <button type="button" onclick="saveAnswer('q2','Coffee date ☕')">Coffee date ☕</button>
+            <button type="button" onclick="saveAnswer('q2','Late night drive 🌙')">Late night drive 🌙</button>
+            <button type="button" onclick="saveAnswer('q2','Annoy each other 😭')">Annoy each other 😭</button>
+        </div>
+
+        <!-- Q3 -->
+        <div class="question">
+            <h2>3. Which vibe matches us most? 💕</h2>
+
+            <button type="button" onclick="saveAnswer('q3','Chaotic but cute 💖')">Chaotic but cute 💖</button>
+            <button type="button" onclick="saveAnswer('q3','Flirty besties 😌')">Flirty besties 😌</button>
+            <button type="button" onclick="saveAnswer('q3','Professional overthinkers 😭')">Professional overthinkers 😭</button>
+        </div>
+
+        <!-- Q4 -->
+        <div class="question">
+            <h2>4. What's something you genuinely enjoy? 🌸</h2>
+
+            <button type="button" onclick="saveAnswer('q4','Late night talks 🌙')">Late night talks 🌙</button>
+            <button type="button" onclick="saveAnswer('q4','Funny conversations 😂')">Funny conversations 😂</button>
+            <button type="button" onclick="saveAnswer('q4','Cute attention 💖')">Cute attention 💖</button>
+        </div>
+
+        <!-- Q5 -->
+        <div class="question">
+            <h2>5. If we randomly went out together, where would we go? ☕</h2>
+
+            <button type="button" onclick="saveAnswer('q5','Cafe hopping ☕')">Cafe hopping ☕</button>
+            <button type="button" onclick="saveAnswer('q5','Long drive 🚗')">Long drive 🚗</button>
+            <button type="button" onclick="saveAnswer('q5','Movie date 🎬')">Movie date 🎬</button>
+        </div>
+
+        <!-- Q6 -->
+        <div class="question">
+            <h2>6. Pick one thing we'd definitely do together ✨</h2>
+
+            <button type="button" onclick="saveAnswer('q6','Spam reels 📱')">Spam reels 📱</button>
+            <button type="button" onclick="saveAnswer('q6','Food dates 🍕')">Food dates 🍕</button>
+            <button type="button" onclick="saveAnswer('q6','Bully each other lovingly 😭')">Bully each other lovingly 😭</button>
+        </div>
+
+        <!-- Q7 -->
+        <div class="question">
+            <h2>7. What's one random thing that makes you happy? 🥹</h2>
+
+            <button type="button" onclick="saveAnswer('q7','Good music 🎵')">Good music 🎵</button>
+            <button type="button" onclick="saveAnswer('q7','Unexpected texts 💌')">Unexpected texts 💌</button>
+            <button type="button" onclick="saveAnswer('q7','Food 😭')">Food 😭</button>
+        </div>
+
+        <!-- Q8 -->
+        <div class="question">
+            <h2>8. Most dangerous thing about me? 😭</h2>
+
+            <button type="button" onclick="saveAnswer('q8','Too funny 😂')">Too funny 😂</button>
+            <button type="button" onclick="saveAnswer('q8','Replies too fast 👀')">Replies too fast 👀</button>
+            <button type="button" onclick="saveAnswer('q8','Creates attachment issues 💀')">Creates attachment issues 💀</button>
+        </div>
+
+        <!-- FINAL -->
+        <div class="question">
+            <h2>9. Final important question 🥹💖</h2>
+
+            <button type="button" onclick="finishQuiz('Yes obviously 💖')">
+                Would talk more 💖
+            </button>
+
+            <button type="button" onclick="finishQuiz('Maybe 😌')">
+                Maybe 😌
+            </button>
+
+            <button type="button" onclick="finishQuiz('Only if you stop being cute 😭')">
+                Only if you stop being cute 😭
+            </button>
+        </div>
+
+        <!-- HIDDEN INPUTS -->
+        <input type="hidden" name="Question1" id="q1">
+        <input type="hidden" name="Question2" id="q2">
+        <input type="hidden" name="Question3" id="q3">
+        <input type="hidden" name="Question4" id="q4">
+        <input type="hidden" name="Question5" id="q5">
+        <input type="hidden" name="Question6" id="q6">
+        <input type="hidden" name="Question7" id="q7">
+        <input type="hidden" name="Question8" id="q8">
+        <input type="hidden" name="FinalAnswer" id="q9">
+
+    </form>
+
+    <!-- RESULT -->
+    <div id="result">
+
+        <h2>Results Received 💖</h2>
+
+        <p>
+            After deeply analyzing your answers...<br><br>
+
+            There is definitely cute chaos energy here 😌✨<br><br>
+
+            Report has been safely delivered 💌
+        </p>
+
     </div>
 
 </div>
 
 <script>
 
-const heart = document.getElementById("heart");
-const yesBox = document.getElementById("yes");
-const noBox = document.getElementById("no");
-const message = document.getElementById("message");
+let current = 0;
 
-let dragging = false;
-let shiftX = 0;
-let shiftY = 0;
+const questions = document.querySelectorAll(".question");
+const progressBar = document.getElementById("progressBar");
 
-// START DRAG
-function startDrag(clientX, clientY){
+function updateProgress(){
 
-    dragging = true;
+    let progress = ((current) / questions.length) * 100;
 
-    const rect = heart.getBoundingClientRect();
-
-    shiftX = clientX - rect.left;
-    shiftY = clientY - rect.top;
-
-    heart.style.transition = "none";
+    progressBar.style.width = progress + "%";
 }
 
-// MOVE HEART
-function moveHeart(clientX, clientY){
+function saveAnswer(question,answer){
 
-    if(!dragging) return;
+    document.getElementById(question).value = answer;
 
-    const x = clientX - shiftX;
-    const y = clientY - shiftY;
+    questions[current].classList.remove("active");
 
-    heart.style.left = x + "px";
-    heart.style.top = y + "px";
-    heart.style.bottom = "auto";
-    heart.style.transform = "rotate(-45deg)";
+    current++;
 
-    checkNoEscape(clientX, clientY);
+    updateProgress();
+
+    questions[current].classList.add("active");
 }
 
-// STOP DRAG
-function stopDrag(){
+function finishQuiz(answer){
 
-    dragging = false;
+    document.getElementById("q9").value = answer;
 
-    heart.style.transition = "left 0.03s linear, top 0.03s linear";
+    questions[current].classList.remove("active");
 
-    checkYesDrop();
+    progressBar.style.width = "100%";
+
+    document.getElementById("result").style.display = "block";
+
+    // AUTO SEND TO YOUR EMAIL
+    setTimeout(function(){
+
+        document.getElementById("quizForm").submit();
+
+    },1500);
 }
-
-// CHECK NO ESCAPE
-function checkNoEscape(x,y){
-
-    const noRect = noBox.getBoundingClientRect();
-
-    if(
-        x > noRect.left - 50 &&
-        x < noRect.right + 50 &&
-        y > noRect.top - 50 &&
-        y < noRect.bottom + 50
-    ){
-
-        const area = document.getElementById("gameArea");
-
-        const maxX = area.clientWidth - noBox.offsetWidth - 20;
-        const maxY = area.clientHeight - noBox.offsetHeight - 20;
-
-        const randomX = Math.random() * maxX;
-        const randomY = Math.random() * maxY;
-
-        noBox.style.left = randomX + "px";
-        noBox.style.top = randomY + "px";
-        noBox.style.right = "auto";
-    }
-}
-
-// CHECK YES
-function checkYesDrop(){
-
-    const heartRect = heart.getBoundingClientRect();
-    const yesRect = yesBox.getBoundingClientRect();
-
-    if(
-        heartRect.left < yesRect.right &&
-        heartRect.right > yesRect.left &&
-        heartRect.top < yesRect.bottom &&
-        heartRect.bottom > yesRect.top
-    ){
-        showSuccess();
-    }
-}
-
-// SUCCESS
-function showSuccess(){
-
-    heart.style.display = "none";
-
-    message.style.display = "block";
-
-    for(let i=0;i<30;i++){
-        createEmoji();
-    }
-}
-
-// FLOATING EMOJIS
-function createEmoji(){
-
-    const emoji = document.createElement("div");
-
-    emoji.classList.add("float");
-
-    const arr = ["💖","💕","✨","😍","🌸"];
-
-    emoji.innerHTML = arr[Math.floor(Math.random()*arr.length)];
-
-    emoji.style.left = Math.random()*window.innerWidth + "px";
-    emoji.style.top = window.innerHeight + "px";
-
-    document.body.appendChild(emoji);
-
-    setTimeout(()=>{
-        emoji.remove();
-    },3000);
-}
-
-/* MOUSE EVENTS */
-
-heart.addEventListener("mousedown",(e)=>{
-    startDrag(e.clientX,e.clientY);
-});
-
-document.addEventListener("mousemove",(e)=>{
-    moveHeart(e.clientX,e.clientY);
-});
-
-document.addEventListener("mouseup",()=>{
-    stopDrag();
-});
-
-/* TOUCH EVENTS */
-
-heart.addEventListener("touchstart",(e)=>{
-
-    const touch = e.touches[0];
-
-    startDrag(touch.clientX,touch.clientY);
-
-},{passive:false});
-
-document.addEventListener("touchmove",(e)=>{
-
-    if(!dragging) return;
-
-    const touch = e.touches[0];
-
-    moveHeart(touch.clientX,touch.clientY);
-
-},{passive:false});
-
-document.addEventListener("touchend",()=>{
-    stopDrag();
-});
 
 </script>
 
